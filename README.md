@@ -1,7 +1,8 @@
 # learning-notes
+
 My learning notes
 
-# histories
+## histories
 
 Name | Type | Author | Linkage | Language | Folder
 --------| ---- | ------ | --- | ------- | -------
