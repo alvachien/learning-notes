@@ -1,0 +1,20 @@
+{
+  "name": "learn-mostly-adequate-guide",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Learning Notes",
+  "keywords": [
+    "Learning",
+    "Note"
+  ],
+  "scripts": {
+    "test": "mocha src/**/*_spec.js"
+  },
+  "dependencies": {
+    "ramda": "^0.27.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.0"
+  }
+}
