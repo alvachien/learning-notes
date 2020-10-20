@@ -16,4 +16,9 @@ describe('Curry exercises', function() {
         var rst = exec.sentences(["my smart test", "My second Smart test"]);
         assert.deepEqual(rst, [['my', 'smart', 'test'], ['My', 'second', 'Smart', 'test']]);
     });
+
+    it('exercise 2', function(){
+        var rst = exec.filterQs2(['my', 'second', 'exercise']);
+        assert.deepEqual(rst, ['my', 'second', 'exercise']);
+    });    
 });
