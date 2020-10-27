@@ -45,6 +45,7 @@ var max = function (xs) {
   }, -Infinity, xs);
 };
 
+var max2 = _.reduce();
 
 // 彩蛋 1:
 // ============

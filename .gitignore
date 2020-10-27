@@ -8,3 +8,5 @@
 .npmrc
 
 /*/node_modules
+
+.vscode/
