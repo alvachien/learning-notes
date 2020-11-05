@@ -45,19 +45,19 @@ var max = function (xs) {
   }, -Infinity, xs);
 };
 
-var max2 = _.reduce();
+var max2 = _.reduce(_keepHighest, -Infinity);
 
 // 彩蛋 1:
 // ============
 // 包裹数组的 `slice` 函数使之成为 curry 函数
 // //[1,2,3].slice(0, 2)
-var slice = undefined;
-
+// var slice = undefined;
+var slice2 =  _.curry(function(start, end, xs) { return xs.slice(start, end); });
 
 // 彩蛋 2:
 // ============
 // 借助 `slice` 定义一个 `take` curry 函数，该函数调用后可以取出字符串的前 n 个字符。
-var take = undefined;
+var take = slice2(0);
 
 
 module.exports = {
@@ -66,7 +66,8 @@ module.exports = {
   sentences: sentences,
   filterQs: filterQs,
   filterQs2: filterQs2,
-  // max: max,
-  // slice: slice,
-  // take: take
+  max: max,
+  max2: max2,
+  slice2: slice2,
+  take: take
 };
