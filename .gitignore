@@ -12,3 +12,4 @@
 # Java
 .vscode/
 *.class
+/.mvn
