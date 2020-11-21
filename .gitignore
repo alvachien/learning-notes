@@ -14,3 +14,4 @@
 *.class
 /.mvn
 target/
+.mvn/
