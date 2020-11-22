@@ -1,4 +1,4 @@
-package com.alvachien.app;
+package com.alvachien.learning.maven_tutorial;
 
 /**
  * Hello world!

@@ -13,3 +13,6 @@ Thinking In Java | Book | Author | Link | Java  | [Thinking in java](./thinking_
 Java教程 | Documentation |  |  | Java | [Link](./java-tutorial)
 Python教程 | Documentation |  |  | Python | 
 Spring教程 | Documentation |  |  | Java | [Link](./spring-tutorial)
+
+# About
+It's a learning notes repo.

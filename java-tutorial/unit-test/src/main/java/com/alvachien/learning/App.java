@@ -1,4 +1,4 @@
-package com.alvachien.app;
+package com.alvachien.learning;
 
 /**
  * Hello world!

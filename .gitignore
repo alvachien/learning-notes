@@ -15,3 +15,8 @@
 /.mvn
 target/
 .mvn/
+
+## Maven project
+.project
+*.prefs
+*.classpath
