@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.alvachien.learning.spring_tutorial;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.alvachien.learning;
+package com.alvachien.learning.java_tutorial.unit_tests;
 
 /**
  * Hello world!

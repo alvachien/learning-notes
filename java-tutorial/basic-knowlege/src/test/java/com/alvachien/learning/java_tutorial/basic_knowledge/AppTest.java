@@ -1,4 +1,4 @@
-package com.alvachien.learning;
+package com.alvachien.learning.java_tutorial.basic_knowledge;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
