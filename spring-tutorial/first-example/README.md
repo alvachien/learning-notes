@@ -1,6 +1,6 @@
 # About
 
-Spring based project without annoation but XML.
+First-Spring based project without annoation but XML.
 
 
 # How to run
