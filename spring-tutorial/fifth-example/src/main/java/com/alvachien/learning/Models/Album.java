@@ -34,4 +34,11 @@ public class Album {
     public void setCreatedBy(String crtby) {
         this.createdBy = crtby;
     }
+
+    @Override
+    public String toString() {
+        return "ID: " + this.id
+            + ", Title: " + this.title
+            + ", Desp: " + this.desp;
+    }
 }

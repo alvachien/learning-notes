@@ -71,14 +71,14 @@ public class AppConfig
         // DriverManager.d
 
         SQLServerDataSource ds = new SQLServerDataSource();
-        ds.setURL("jdbc:sqlserver://STUDYPC_201603\\SQLEXPRESS;database=ACGallery;integratedSecurity=true;");
+        // ds.setURL("jdbc:sqlserver://STUDYPC_201603\\SQLEXPRESS;database=ACGallery;integratedSecurity=true;");
         // ds.setUser(jdbcUser);  
         // ds.setPassword(jdbcPassword);  
         // ds.setPortNumber(1433);
 
-        //ds.setIntegratedSecurity(true);
-        //ds.setServerName("STUDYPC_201603\\SQLEXPRESS");  
-        //ds.setDatabaseName(jdbcDatabase);
+        ds.setIntegratedSecurity(true);
+        ds.setServerName("STUDYPC_201603\\SQLEXPRESS");  
+        ds.setDatabaseName(jdbcDatabase);
         
         return ds;
 	}

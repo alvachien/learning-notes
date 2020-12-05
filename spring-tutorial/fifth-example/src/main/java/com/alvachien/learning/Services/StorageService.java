@@ -47,7 +47,7 @@ public class StorageService {
 	public List<Album> getAlbums(int pageIndex) {
 		int limit = 100;
 		int offset = limit * (pageIndex - 1);
-		return jdbcTemplate.query("SELECT * FROM Album LIMIT ? OFFSET ?", new Object[] { limit, offset },
-				new BeanPropertyRowMapper<>(Album.class));
+		return jdbcTemplate.query("SELECT AlbumID as id, Title as title, Desp as desp FROM Album ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY", new Object[] { offset, limit  },
+			new BeanPropertyRowMapper<>(Album.class));
 	}	
 }
