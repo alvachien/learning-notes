@@ -1,6 +1,6 @@
 # learning-notes
 
-My learning notes
+My learning notes for the technical side.
 
 ## histories
 
@@ -14,6 +14,9 @@ Java教程 | Documentation |  |  | Java | [Link](./java-tutorial)
 Python教程 | Documentation |  |  | Python | [Link](./python-tutorial)
 Spring教程 | Documentation |  |  | Java | [Link](./spring-tutorial)
 Spring Boot教程 | Documentation |  |  | Java | 
+JUnit 5 Fundamental | Documentation |  |  | Java | 
+ML.NET | Documentation | | | .Net | 
+
 
 # About
 
