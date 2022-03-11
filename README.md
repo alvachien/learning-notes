@@ -2,7 +2,9 @@
 
 My learning notes for the technical side.
 
-## histories
+
+## histories    
+
 
 Name | Type | Author | Linkage | Language | Folder
 --------| ---- | ------ | --- | ------- | -------
@@ -16,6 +18,7 @@ Spring教程 | Documentation |  |  | Java | [Link](./spring-tutorial)
 Spring Boot教程 | Documentation |  |  | Java | 
 JUnit 5 Fundamental | Documentation |  |  | Java | 
 ML.NET | Documentation | | | .Net | 
+Effective Java | Book | | | Java | 
 
 
 # About
