@@ -1,2 +1,22 @@
-# Java complied files
+# compiled output
+/dist
+/tmp
+
+# dependencies
+/node_modules
+/bower_components
+.npmrc
+
+/*/node_modules
+
+# Java
+.vscode/
 *.class
+/.mvn
+target/
+.mvn/
+
+## Maven project
+.project
+*.prefs
+*.classpath
