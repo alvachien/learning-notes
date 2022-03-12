@@ -18,7 +18,7 @@ Spring教程 | Documentation |  |  | Java | [Link](./spring-tutorial)
 Spring Boot教程 | Documentation |  |  | Java | 
 JUnit 5 Fundamental | Documentation |  |  | Java | 
 ML.NET | Documentation | | | .Net | 
-Effective Java | Book | | | Java | 
+Effective Java (Third edition) | Book | Joshua Bloch | [Source code on Github](https://github.com/jbloch/effective-java-3e-source-code) | Java | [Link](./effective-java)
 
 
 # About
