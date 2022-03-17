@@ -35,3 +35,32 @@ Java提供了三种方式来表示字符：
 - 直接使用单引号括起来的字符，如'a'；
 - 使用转义字符，如'\n';
 - 使用Unicode转义字符，如'\u000a'（相当于\n）；
+
+## Java泛型
+
+Java的泛型支持是通过Java编译器实现的。所以，JVM层面没有泛型的概念。所以下述代码可以正常执行：
+
+```java
+List list = new ArrayList();
+list.add("test1");
+List<Integer> list2 = list;
+for(int i = 0; i < list2.size(); i ++) {
+    System.out.println(list2.get(i));
+}
+```
+
+## 多线程
+
+JDK 1.5开始，Java提供了三种方法来创建和启动多线程：
+- 继承Thread类来创建线程类，重写run()方法。
+- 实现Runnable接口来创建线程类，重写其run()方法。
+- 实现Callable接口来创建线程类，重写call()方法。
+
+第一种方法实现较为复杂，且不易于分享数据。更加值得注意的是，需要调用start()方法，而不是run()方法。
+第二种方法跟第三种方法本质相同，只是Callable接口的call()方法可以声明抛出异常，也可以拥有返回值。
+
+## synchronized关键字
+
+Java提供了synchronized关键字用于修饰方法。任何线程在进入synchronzied的方法之前，都必须获得该方法的同步监视器————达到线程安全方法。
+
+
