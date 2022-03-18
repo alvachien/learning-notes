@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
  
     <groupId>com.alvachien</groupId>
-    <artifactId>writing-tests</artifactId>
+    <artifactId>exec1-first-test</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
  
-    <name>writing-tests</name>
+    <name>exec1-first-test</name>
     <url>http://www.example.com</url>
  
     <properties>
