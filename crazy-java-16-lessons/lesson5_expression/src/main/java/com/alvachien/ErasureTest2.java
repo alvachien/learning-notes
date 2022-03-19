@@ -3,11 +3,11 @@ package com.alvachien;
 import java.util.ArrayList;
 import java.util.List;
 
-class Apple<T extends Number> {
+class Apple2<T extends Number> {
     T size;
-    public Apple() {        
+    public Apple2() {        
     }
-    public Apple(T size) {
+    public Apple2(T size) {
         this.size = size;
     }
     public void setSize(T size) {
@@ -32,7 +32,7 @@ class Apple<T extends Number> {
 
 public class ErasureTest2 {
     public static void main(String[] args) {
-        Apple<Integer> a = new Apple<Integer>(6);
+        Apple2<Integer> a = new Apple2<Integer>(6);
         for(String apple: a.getApples()) {
             System.out.println(apple);
         }
