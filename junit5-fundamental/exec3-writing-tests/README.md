@@ -1,14 +1,29 @@
-# exec-maven-project
+# exec3-writing-tests
 
-Setup a Maven project for JUnit 5 manually
+Maven Project:
+- Java 11
+- JUnit 5
 
 
-It is recommend to copy this folder to new location as the start point.
+# Key takeaway
 
-# Commands
+## Test 
 
-## Execute test
+Three steps in testing:
+- Arrange (Given in BDD)
+- Act (When in BDD)
+- Assert (Then in BDD)
 
-```Powershell
-mvnw test
-```
+
+## Test instance
+
+PER_CLASS
+PER_METHOD
+
+
+## Utilties methods
+
+
+- Collections.singletonList
+- Arrays.asList
+
