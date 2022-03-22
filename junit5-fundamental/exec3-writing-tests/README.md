@@ -7,7 +7,7 @@ Maven Project:
 
 # Key takeaway
 
-## Test 
+## Test structure
 
 Three steps in testing:
 - Arrange (Given in BDD)
@@ -15,11 +15,27 @@ Three steps in testing:
 - Assert (Then in BDD)
 
 
-## Test instance
+## Lifecycle methods
 
 PER_CLASS
 PER_METHOD
 
+
+## Test hierarchies
+
+## Assertion
+
+## Disabling tests
+
+## Assumptions
+
+## Test interfaces and default methods
+
+## Repeating tests
+
+```Java
+@RepeatedTest
+```
 
 ## Utilties methods
 
