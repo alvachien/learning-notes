@@ -8,7 +8,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -16,7 +19,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -124,6 +126,37 @@ public class RewardByGiftServiceParameterizedTest {
 
     static Stream<Arguments> productIdsCustomerPoints() {
         return productIds().mapToObj(productId -> Arguments.of(productId, 100 * productId));
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/product-point-data.csv")
+    void discountShouldBeAppliedCsvFileSource(long productId, long customerPoints) {
+        service.setGiftProductId(productId);
+
+        RewardInformation info = service.applyReward(getSampleOrder(), customerPoints);
+
+        assertTrue(info.getDiscount() > 0);
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(ProductIdArgumentsProvider.class)
+    void discountShouldBeAppliedArgumentsSource(long productId, long customerPoints) {
+        service.setGiftProductId(productId);
+        RewardInformation info = service.applyReward(getSampleOrder(), customerPoints);
+
+        assertTrue(info.getDiscount() > 0);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "1; Small Decaf; 1.99", "2; Big Decaf; 2.49"})
+    void discountShouldBeAppliedCustomConverter(
+        @ConvertWith(ProductArgumentConverter.class) Product product) {
+        System.out.println("Testing product" + product.getName());
+        
+        service.setGiftProductId(product.getId());
+        RewardInformation info = service.applyReward(getSampleOrder(), 200);
+
+        assertTrue(info.getDiscount() > 0);
     }
 
     public List<Product> getSampleOrder() {
