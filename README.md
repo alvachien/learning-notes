@@ -19,7 +19,7 @@ In process | Spring Boot教程 | Documentation |  |  | Java |
 In process | JUnit 5 Fundamental | Documentation |  |  | Java | 
 In process | ML.NET | Documentation | | | .Net | 
 DONE | 疯狂Java，突破程序员基本功的16课 Crazy Java | Book | | | Java | [Link](./crazy-java-16-lessons)
-In process | 算法的乐趣 | Book | | | |
+In process | 算法的乐趣 | Book | | | | [Link](./algorithm-pleasure)
 In process | Effective Java (Third edition) | Book | Joshua Bloch | [Source code on Github](https://github.com/jbloch/effective-java-3e-source-code) | Java | [Link](./effective-java)
 
 
