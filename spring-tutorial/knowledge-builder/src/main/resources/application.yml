@@ -1,0 +1,7 @@
+server:
+  port: 8084
+
+spring:
+  datasource:
+    url: "jdbc:sqlserver://localhost;database=acquizdb;integratedSecurity=true;"
+    driverClassName: "com.microsoft.sqlserver.jdbc.SQLServerDriver"

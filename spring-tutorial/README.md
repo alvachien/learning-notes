@@ -29,3 +29,9 @@ Spring project with JdbcTemplate, with SQL Server.
 
 Spring boot project.
 
+## 007. Knowledge builder
+
+Spring boot project:
+- Spring Boot 2.65
+- Spring Web
+- MS SQL sever
