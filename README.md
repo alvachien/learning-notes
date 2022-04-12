@@ -16,7 +16,9 @@ In process | Java教程 | Documentation |  |  | Java | [Link](./java-tutorial)
 In process | Python教程 | Documentation |  |  | Python | [Link](./python-tutorial)
 In process | Spring教程 | Documentation |  |  | Java | [Link](./spring-tutorial)
 In process | Spring Boot教程 | Documentation |  |  | Java | 
-In process | JUnit 5 Fundamental | Documentation |  |  | Java | 
+DONE | JUnit 5 Fundamental | Documentation |  |  | Java | 
+In process | Java Stream | Documentation | | | Java | [Link](./java-stream/)
+In process | Spring Boot Fundamentals | | | | Java | [Link](./spring-boot-fundamentals/)
 In process | ML.NET | Documentation | | | .Net | 
 DONE | 疯狂Java，突破程序员基本功的16课 Crazy Java | Book | | | Java | [Link](./crazy-java-16-lessons)
 In process | 算法的乐趣 | Book | | | | [Link](./algorithm-pleasure)
