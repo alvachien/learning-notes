@@ -1,4 +1,7 @@
 package com.alvachien.springbootfundamentals.repository;
 
-public interface ApplicationRepository {
+import com.alvachien.springbootfundamentals.entity.Application;
+import org.springframework.data.repository.CrudRepository;
+
+public interface ApplicationRepository extends CrudRepository<Application, Long> {
 }
