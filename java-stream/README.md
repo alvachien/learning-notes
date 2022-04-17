@@ -240,5 +240,248 @@ map2.forEach(
 );
 ```
 
-## Stream
+## Map/Filter/Reduce
+
+### Associativity
+
+```ini
+Red(a, Red(b, c)) = Red(Red(a, b), c)
+```
+
+```java
+// Associative
+BinaryOperator<Integer> op1 = (i1, i2) -> i1 + i2;
+// Associative
+BinaryOperator<Integer> op2 = (i1, i2) -> Integer.max(i1, i2);
+// NOT Associative
+BinaryOperator<Integer> op3 = (i1, i2) -> i1 * i1 + i2 * i2;
+// Associative
+BinaryOperator<Integer> op4 = (i1, i2) -> i1;
+// NOT Associative
+BinaryOperator<Integer> op4 = (i1, i2) -> (i1 + i2) / 2;
+```
+### Optional
+
+A new concept *Optional*, a wrapper type that maybe empty.
+
+## Stream API
+
+From a technical point of view, Stream is a typed interface.
+
+```java
+public interface Stream<T> extends BaseStream<T, Stream<T>> {
+    // ...
+}
+```
+
+A Stream does not hold any data, it **pulls** the data processes from a source, and a Stream does not modifiy the data it processes, and the size of source is not known at the build time.
+
+
+### Build stream
+
+Several patterns to build stream: *stream()*, *empty()*, *of()*, *generate()*, *iterate()*, *current()*, *chars()*, *Stream.builder()*
+
+Example: 
+```java
+List<Person> people = ...;
+Stream<Person> stream = people.stream();
+Stream.empty();
+Stream.of("one", "two", "three");
+Stream.generate(() -> "one");
+Stream.iterate("+", s -> s + "+");
+ThreadLocalRandom.current().ints();
+IntStream stream = "hello".chars();
+Stream<String> words = Pattern.compile("[^\\p{javaLetter}]").splitAsStream(book);
+Stream<String> lines = Files.lines(path);
+Stream.Builder<String> builder = Stream.builder();
+builder.add("one").add("two").add("three");
+builder.accept("four");
+Stream<String> stream = builder.build();
+stream.forEach(System.out::println);
+```
+
+### Map/filter/reduce
+
+Example:
+```java
+persons.stream()                // Stream<Person>
+    .map(p -> p.getAge())       // Stream<Integer>
+    .filter(age -> age > 20)    // Stream<Integer>
+    .forEach(System.out::println);
+```
+
+The map() call can change the type of a stream;
+The filter() call does not change the type of a stream;
+
+### Intermediate and Terminal calls
+
+A termnial operation must be called to trigger the processing of a Stream.
+If there is no terminal operation, then no data will be proceed.
+
+Normally:
+- A call that returns a Stream is an intermediate call;
+- A call that returns something else, or void is a terminal call that triggers the processing.
+
+Example:
+```java
+persons.stream()
+    .map(p -> p.getAge())
+    .forEach(System.out::println) // !!! DOES NOT COMPILE !!!
+    .filter(age -> age > 20)
+    .forEach(System.out::println);
+```
+
+### Method: skip() and limit()
+
+Example:
+
+```java
+persons.stream()
+    .skip(2)
+    .limit(3)
+    .filter(person -> person.getAge() > 20)
+    .forEach(System.out::println); // triggers the computation
+```
+
+### Match Reductions
+
+Match reduction are terminal operations that return a boolean.
+
+Three types of matchers: *anyMatch(), allMatch() and noneMatch()*.
+
+```java
+booleanb = people.stream()
+    .anyMatch(p -> p.getAge() > 20);
+```
+
+### Find Reduction
+
+There are two types of find reduction: findAll() and findAny().
+
+They may have nothing to return so it returns an Optional:
+- If Stream is empty;
+- Or there is no value that matches the predicate
+
+```java
+List<Person> people= ...;
+Optional<Person> opt = people.stream()
+    .findFirst(p -> p.getAge() > 20);
+```
+
+### Reduce Reduction
+
+There are three types of reduce reduction.
+
+First one, returns the result:   
+```java
+intmaxOfAges= people.stream()
+    .reduce(0, (p1, p2) -> Integer.max(p1.getAge(), p2.getAge()));
+```
+
+Second version returns Optional: 
+```java
+List<Person> people= ...;
+Optional<Integer> opt= people.stream()
+    .reduce((p1, p2) -> Integer.max(p1.getAge() + p2.getAge()));
+```
+
+Third one, used in parallel operations:   
+
+```java
+List<Person> people= ...;
+List<Integer> ages= people.stream()
+    .reduce(
+        newArrayList<Integer>(),
+        (list, p) -> { list.add(p.getAge()) ; returnlist;},
+        (list1, list2) -> { list1.addAll(list2) ; returnlist1 ; }
+        );
+```
+
+### Spliterator
+
+The **Spliterator** is the object which a Stream is built, and it models the access to the data for a Stream.
+
+```java
+default Stream<E> stream() {
+    return StreamSupport.stream(spliterator(), false);
+}
+default Spliterator<E> spliterator() { 
+    retrun Spliterators.spliterator(this, 0);
+}
+```
+
+The Spliterator is different is different collection. For instance: 
+```java
+// ArrayList
+public Spliterator<E> spliterator() {
+    return new ArrayListSpliterator<>(this, 0, -1, 0);
+}
+// Hashset
+public Spliterator<E> spliterator() {
+    return new HashMap.KeySpliterator<E, Object>(map, 0, -1, 0, 0);
+}
+```
+
+A *Stream* is divived into two things:
+- An object to access data (Spliterator). And it can be overriden to suit needs.
+- An object to handle the processing of the data. That is the ReferencedPipeline. It is a very complex object, normally won't override it.
+
+To build own Spliterator, examine the following interface:
+```java
+public interface Spliterator<T> Spliterator {
+    public static final intORDERED= 0x00000010;
+    public static final intDISTINCT= 0x00000001;
+    public static final intSORTED= 0x00000004;
+    public static final intSIZED= 0x00000040;
+    public static final intNONNULL= 0x00000100;
+    public static final intIMMUTABLE= 0x00000400;
+    public static final intCONCURRENT = 0x00001000;
+    public static final intSUBSIZED = 0x00004000;
+
+    boolean tryAdvance(Consumer<? super T> action);
+    Spliterator trySplit();
+    long estimateSize();
+    int characteristics();
+    defaultvoidforEachRemaining(Consumer<? superT> action) {
+        do{ } while(tryAdvance(action));
+    }
+    defaultlonggetExactSizeIfKnown() {
+        return(characteristics() & SIZED) == 0 ? -1L : estimateSize();
+    }
+    defaultbooleanhasCharacteristics(intcharacteristics) {
+        return(characteristics() & characteristics) == characteristics;
+    }
+}
+```
+
+The implementation of Spliterator in ArrayList.
+
+```java
+staticfinal class ArrayListSpliterator<E> implementsSpliterator<E> {
+    private final ArrayList<E> list;
+    private int index; // current index, modified on advance/split
+    private int fence; // -1 until used; then one past last index
+    private int expectedModCount; // initialized when fence set
+    public long estimateSize() {
+        return(long) (getFence() -index);
+    }
+    public boolean tryAdvance(Consumer<? superE> action) {
+        int hi = getFence(), i = index;
+        if(i < hi) {
+            index = i+ 1;
+            E e = (E)list.elementData[i];
+            action.accept(e);
+            return true;
+        }
+        return false;
+    }
+    public ArrayListSpliterator<E> trySplit() {
+        int hi = getFence(), lo = index, mid = (lo+ hi) >>> 1;
+        return (lo >= mid) ? null: // divide range in half unless too small
+            new ArrayListSpliterator<E>(list, lo, index = mid,expectedModCount);
+    }
+}
+```
+
+### Concatenating Streams
 
