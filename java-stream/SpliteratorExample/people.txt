@@ -1,0 +1,12 @@
+Alice
+52
+New York
+Brian
+25
+Chicage
+Chelsea
+19
+London
+David
+44
+Paris
