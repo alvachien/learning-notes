@@ -15,6 +15,7 @@
 /.mvn
 target/
 .mvn/
+.idea/
 
 ## Maven project
 .project
