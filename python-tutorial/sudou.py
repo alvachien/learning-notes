@@ -1,5 +1,6 @@
 alldata = []
 elemdict = {}
+alldata_stack = []
 
 def init_numdict():
     return {
@@ -231,26 +232,20 @@ def parse_data_core():
     elemdict.clear()
 
     # Level 1. parse all values
-    rowcursor = 0
     for rowidx in range(9):
         rowelements = get_row_element( rowidx )
-        colcursor = 0
         for colidx in range(9):
-            cellidx = get_cell_index(rowcursor, colcursor)
+            cellidx = get_cell_index(rowidx, colidx)
             if alldata[rowidx][colidx] == 0:
-                possbledata = get_possible_value(rowcursor, colcursor)
+                possbledata = get_possible_value(rowidx, colidx)
                 elemdict[cellidx] = (0, possbledata)
             else:
                 elemdict[cellidx] = (alldata[rowidx][colidx], [])
-            colcursor += 1
-        rowcursor += 1
-
 
     # Level 2. restrict values per section
     for sectid in range(9):
         sectnumdict = init_numdict()
         cellindexs = get_section_cellindexes(sectid)
-
            
         for cellidx in cellindexs:
             if elemdict[cellidx][0] != 0:
@@ -265,7 +260,6 @@ def parse_data_core():
                 for cellidx in cellindexs:
                     if elemdict[cellidx][0] == 0 and miskey in elemdict[cellidx][1]:
                         elemdict[cellidx] = (0, [miskey])
-    
     
     # Level 3 print data
     print("After ====================")    
@@ -288,10 +282,9 @@ def parse_data():
         parse_data_core()
         emptyelements = empty_item_count()
         if emptyelements == prvelments:
+            # Parse the detect lock.
             print("僵局")
             break;
-
-
 
 def process_file():
     inputfile = input("输入文件名：")
