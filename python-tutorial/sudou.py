@@ -275,16 +275,21 @@ def parse_data_core():
             print([rowidx, colidx], val[1])
             if len(val[1]) == 1:
                 alldata[rowidx][colidx] = val[1][0]
-        
-    print(alldata)
+
+    for linedata in alldata:  
+        print(linedata)
 
 
 def parse_data():
     emptyelements = empty_item_count()
     while emptyelements > 0:
         print("Empty Elements Left: ", emptyelements)
+        prvelments = emptyelements
         parse_data_core()
         emptyelements = empty_item_count()
+        if emptyelements == prvelments:
+            print("僵局")
+            break;
 
 
 
