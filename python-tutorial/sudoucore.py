@@ -9,6 +9,7 @@
 
 # Initial. number check dictionary
 # For each row, column and section
+
 def init_num_check_dict():
     return {
         1: 0,
@@ -102,7 +103,6 @@ def from_cell_index(cellidx):
 class SudouCore:
     currentdata = []
     process_stack = []
-    deadlock_tried = []
     # Element data in work solution
     elemdict = {}
 
@@ -236,7 +236,7 @@ class SudouCore:
                 del numdic[elem]
             sectcursor += 1
 
-        return numdic.keys()
+        return list(numdic.keys())
 
 
     # Get empty cell count.
@@ -256,7 +256,6 @@ class SudouCore:
 
         # Level 1. parse all values
         for rowidx in range(9):
-            rowelements = self.get_row_element( rowidx )
             for colidx in range(9):
                 cellidx = get_cell_index(rowidx, colidx)
                 if self.currentdata[rowidx][colidx] == 0:
@@ -272,7 +271,8 @@ class SudouCore:
             
             for cellidx in cellindexs:
                 if self.elemdict[cellidx][0] != 0:
-                    del sectnumdict[self.elemdict[cellidx][0]]
+                    if self.elemdict[cellidx][0] in sectnumdict:
+                        del sectnumdict[self.elemdict[cellidx][0]]
 
             for miskey in sectnumdict.keys():
                 ocurtimes = 0
@@ -286,16 +286,18 @@ class SudouCore:
         
         # Level 3 print data
         print("After ====================")
+        errocurr = False
         for key, val in self.elemdict.items():
             if val[0] == 0:
-                rowidx, colidx = from_cell_index(key)
-                print([rowidx, colidx], val[1])
-                if len(val[1]) == 1:
-                    self.currentdata[rowidx][colidx] = val[1][0]
+                rowx, colx = from_cell_index(key)
+                print([rowx, colx], val[1], len(val[1]))
+                valen = len(val[1])
+                if valen == 1:
+                    self.currentdata[rowx][colx] = val[1][0]
+                elif valen == 0:
+                    errocurr = True
 
-        for linedata in self.currentdata:
-            print(linedata)
-
+        return errocurr
 
     ## Workout solution
     def workout_solution(self):
@@ -303,47 +305,252 @@ class SudouCore:
         while emptyelements > 0:
             print("Empty Elements Left: ", emptyelements)
             prvelments = emptyelements
-            self.workout_solution_core()
-            emptyelements = self.get_empty_cell_count()
-            if emptyelements == prvelments:
-                # Parse the detect lock.
-                print("僵局")
-                self.detect_deadlock_entries()
-                break
+            erroccur = self.workout_solution_core()
+            if erroccur == True:
+                print("Error detected")
+                if len(self.process_stack) > 0:
+                    self.currentdata.clear()
+                    self.currentdata = self.process_stack.pop()
+                    emptyelements = self.get_empty_cell_count()
+                    continue
+                else:
+                    print("无法解决")
+                    break
+            else:
+                emptyelements = self.get_empty_cell_count()
+                if emptyelements == prvelments:
+                    # Parse the detect lock.
+                    print("僵局")
 
+                    if self.detect_deadlock_entries() == True:
+                        for linedata in self.currentdata:
+                            print(linedata)
 
-    ## Detect dead lock entries
-    def detect_deadlock_entries(self):
+                        emptyelements = self.get_empty_cell_count()
+                        continue
+                    else:
+                        break
+                else:
+                    for linedata in self.currentdata:
+                        print(linedata)
+
+    ## Detect dead lock case 1
+    def deadlock_case1(self):
         dictduplicates = {}
-        # Check section
+
+        # Case  1. find out two cells have two pairs. Chose one and go!
+        # elemdict: [8, 8] dict_keys([2, 4])
         for key, val in self.elemdict.items():
             if val[0] == 0 and len(val[1]) == 2:
                 tuplval = tuple( val[1] )
                 if tuplval in dictduplicates.keys():
-                    dictduplicates[tuplval] += 1
+                    dictduplicates[tuplval].append(key)
                 else:
-                    dictduplicates[tuplval] = 0
+                    dictduplicates[tuplval] = [key]
 
-        deadlock = []
+        # dictduplicates: Key: ([2, 4]) Value: [8, 80]
+        dictkeydelted = []
         for dictkey, dictval in dictduplicates.items():
-            if dictval == 2 and dictkey not in self.deadlock_tried:
-                deadlock.append(dictkey)
-                print(dictkey)
+            if len(dictval) != 2:
+                dictkeydelted.append(dictkey)
+            else:
+                print(dictkey, dictval)
+
+        for dictkey in dictkeydelted:
+            del dictduplicates[dictkey]
 
         # Find out the potential solution
-        deadlockpos = []
-        for dl in deadlock:
-            for key, val in self.elemdict.items():
-                if val[0] == 0 and len(val[1]) == 2:
-                    tuplval = tuple( val[1] )
-                    if dl == tuplval:
-                        deadlockpos.append(key)
-                        print(key)
-        
+        potentialSolution = False
+        for dictkey, dictval in dictduplicates.items():
+            print("发现两个完全相同的可能节点", dictkey, dictval)
 
-        
+            pos1row, pos1col = from_cell_index(dictval[0])
+            pos2row, pos2col = from_cell_index(dictval[1])
 
-        
+            currdata2 = []
+            for line in self.currentdata:
+                currdata2.append(line.copy())
 
-        
+            currdata2[pos1row][pos1col] = dictkey[0]
+            currdata2[pos2row][pos2col] = dictkey[1]
+            self.process_stack.append(currdata2)
+
+            currdata2 = []
+            for line in self.currentdata:
+                currdata2.append(line.copy())
+
+            currdata2[pos1row][pos1col] = dictkey[1]
+            currdata2[pos2row][pos2col] = dictkey[0]
+            self.process_stack.append(currdata2)
+
+            potentialSolution = True
+ 
+        if potentialSolution == True:
+            self.currentdata.clear()
+            self.currentdata = self.process_stack.pop()
+
+        return potentialSolution
+
+    ## Detect dead lock case 2
+    def deadlock_case2(self):
+
+        allpossvaldict = init_num_check_dict()
+        for rowidx in range(9):
+            for colidx in range(9):
+                if self.currentdata[rowidx][colidx] != 0:
+                    allpossvaldict[self.currentdata[rowidx][colidx]] += 1
+
+        mostposkey = 0
+        mostposkeyappear = 0
+        for posvalkey, posval in allpossvaldict.items():
+            if mostposkeyappear < posval:
+                mostposkey = posvalkey
+                mostposkeyappear = posval
+
+        potentialSolution = False
+        while mostposkey != 0:
+            print("减少出现次数最多的数字：", mostposkey, "，共出现: ", mostposkeyappear )
+            del allpossvaldict[mostposkey]
+
+            # Missing numbers in each row, does it can only occur it two cell?
+            for rowidx in range(9):
+                rownumdict = {
+                    1: [],
+                    2: [],
+                    3: [],
+                    4: [],
+                    5: [],
+                    6: [],
+                    7: [],
+                    8: [],
+                    9: [],
+                }
+                for colidx in range(9):
+                    cellidx = get_cell_index(rowidx, colidx)
+                    if self.elemdict[cellidx][0] == 0:
+                        for possval in self.elemdict[cellidx][1]:
+                            rownumdict[possval].append([rowidx, colidx])
+                    else:
+                        pass
+                
+                for numkey, numval in rownumdict.items():
+                    if numkey == mostposkey and len(numval) == 2:
+                        print("发现行项目上", numval)
+                        potentialSolution = True
+
+                        currdata2 = []
+                        for line in self.currentdata:
+                            currdata2.append(line.copy())
+                        currdata2[numval[0][0]][numval[0][1]] = numkey
+                        self.process_stack.append(currdata2)
+                        currdata2 = []
+                        for line in self.currentdata:
+                            currdata2.append(line.copy())
+                        currdata2[numval[1][0]][numval[1][1]] = numkey
+                        self.process_stack.append(currdata2)
+
+            for colidx in range(9):
+                colnumdict = {
+                    1: [],
+                    2: [],
+                    3: [],
+                    4: [],
+                    5: [],
+                    6: [],
+                    7: [],
+                    8: [],
+                    9: [],
+                }
+                for rowidx in range(9):
+                    cellidx = get_cell_index(rowidx, colidx)
+                    if self.elemdict[cellidx][0] == 0:
+                        for possval in self.elemdict[cellidx][1]:
+                            colnumdict[possval].append([rowidx, colidx])
+                    else:
+                        pass
+                
+                for numkey, numval in colnumdict.items():
+                    if numkey == mostposkey and len(numval) == 2:
+                        print("发现列项目上")
+                        potentialSolution = True
+
+                        currdata2 = []
+                        for line in self.currentdata:
+                            currdata2.append(line.copy())
+                        currdata2[numval[0][0]][numval[0][1]] = numkey
+                        self.process_stack.append(currdata2)
+                        currdata2 = []
+                        for line in self.currentdata:
+                            currdata2.append(line.copy())
+                        currdata2[numval[1][0]][numval[1][1]] = numkey
+                        self.process_stack.append(currdata2)                    
+
+            for sectidx in range(9):
+                sectnumdict = {
+                    1: [],
+                    2: [],
+                    3: [],
+                    4: [],
+                    5: [],
+                    6: [],
+                    7: [],
+                    8: [],
+                    9: [],
+                }            
+                for cellidx in get_section_cellindexes(sectidx):
+                    if self.elemdict[cellidx][0] == 0:
+                        for possval in self.elemdict[cellidx][1]:
+                            rowx, colx = from_cell_index(cellidx)
+                            sectnumdict[possval].append([rowx, colx])
+                    else:
+                        pass
+                
+                for numkey, numval in sectnumdict.items():
+                    if numkey == mostposkey and len(numval) == 2:
+                        print("发现块项目上")
+                        potentialSolution = True
+
+                        currdata2 = []
+                        for line in self.currentdata:
+                            currdata2.append(line.copy())
+                        currdata2[numval[0][0]][numval[0][1]] = numkey
+                        self.process_stack.append(currdata2)
+                        currdata2 = []
+                        for line in self.currentdata:
+                            currdata2.append(line.copy())
+                        currdata2[numval[1][0]][numval[1][1]] = numkey
+                        self.process_stack.append(currdata2)
+
+            if potentialSolution == True:
+                self.currentdata.clear()
+                self.currentdata = self.process_stack.pop()
+                break
+            else:
+                mostposkey = 0
+                mostposkeyappear = 0
+                for posvalkey, posval in allpossvaldict.items():
+                    if mostposkeyappear < posval:
+                        mostposkey = posvalkey
+                        mostposkeyappear = posval
+
+        return potentialSolution
+
+
+    ## Detect dead lock entries
+    def detect_deadlock_entries(self):
+        if len(self.process_stack) > 0:
+            self.currentdata = self.process_stack.pop()
+            return True
+        else:
+            # Case 1. Two numbers for two possiblities
+            if self.deadlock_case1() == True:
+                return True
+            
+            # Case 2. One number
+            if self.deadlock_case2() == True:
+                return True
+
+            return False
+   
+
 

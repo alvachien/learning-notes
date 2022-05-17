@@ -18,6 +18,9 @@ def process_file():
                             curdata.append(dignum)
                     else:
                         curdata.append(0)
+                else:
+                    pass
+
             if len(curdata) > 0:
                 nline = []
                 for i in range(9):
@@ -26,6 +29,8 @@ def process_file():
                     else:
                         nline.append(0)
                 origindata.append(nline)
+            else:
+                pass
     
 
 def process_input():
@@ -79,4 +84,5 @@ score.currentdata = origindata
 score.workout_solution()
 
 print("2: 校验结果")
+score.check_data()
 
