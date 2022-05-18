@@ -109,6 +109,11 @@ class SudouCore:
     def __init__(self):
         pass
 
+    def clear(self):
+        self.currentdata = []
+        self.process_stack = []
+        self.elemdict.clear()
+
     def get_row_element(self, rowindex):
         return self.currentdata[rowindex]
 
@@ -168,12 +173,12 @@ class SudouCore:
 
         for key, val in numdic.items():
             if val == 0:
-                allerr.append("Missing figure: " + str(key))
+                allerr.append("行、列、宫的所有数字组合中，缺少数字: " + str(key))
             elif val > 1:
-                allerr.append("Figure " + str(key) + " appeared  " + str(val))
+                allerr.append("数字重复出现： " + str(key) + " 出现的次数为：  " + str(val))
 
         if zerovalue > 0:
-            allerr.append("Zero value found: " + str(zerovalue))
+            allerr.append("行、列、宫出现了空值（即0）: " + str(zerovalue))
 
         return allerr
 
@@ -187,25 +192,27 @@ class SudouCore:
         for idx in range(9):
             curerrs = self.check_data_core( self.get_row_element( idx ) )
             if len( curerrs ) > 0:
-                errs.append("Row " + str(idx) + "contains error")
+                errs.append("第： " + str(idx) + " 行出错")
                 errs.append(curerrs)
 
         # Check column
         for idx in range(9):
             curerrs = self.check_data_core( self.get_column_element( idx ) )
             if len( curerrs ) > 0:
-                errs.append("Column " + str(idx) + "contains error")
+                errs.append("第 " + str(idx) + " 列出错")
                 errs.append(curerrs)
 
         # Check section
         for idx in range(9):
             curerrs = self.check_data_core( self.get_section_element( idx ) )
             if len( curerrs ) > 0:
-                errs.append("Section " + str(idx) + "contains error")
+                errs.append("第 " + str(idx) + " 宫出错")
                 errs.append(curerrs)
 
         for err in errs:
             print(err)
+        if len(errs) == 0:
+            print("没有发现错误")
 
 
     # Get possible value for one specified cell
@@ -260,7 +267,11 @@ class SudouCore:
                 cellidx = get_cell_index(rowidx, colidx)
                 if self.currentdata[rowidx][colidx] == 0:
                     possbledata = self.get_possible_value(rowidx, colidx)
-                    self.elemdict[cellidx] = (0, possbledata)
+                    if len(possbledata) == 1:
+                        self.currentdata[rowidx][colidx] = possbledata[0]
+                        self.elemdict[cellidx] = (self.currentdata[rowidx][colidx], [])    
+                    else:
+                        self.elemdict[cellidx] = (0, possbledata)
                 else:
                     self.elemdict[cellidx] = (self.currentdata[rowidx][colidx], [])
 
@@ -285,14 +296,14 @@ class SudouCore:
                             self.elemdict[cellidx] = (0, [miskey])
         
         # Level 3 print data
-        print("After ====================")
+        #print("After ====================")
         errocurr = False
         for key, val in self.elemdict.items():
-            if val[0] == 0:
-                rowx, colx = from_cell_index(key)
-                print([rowx, colx], val[1], len(val[1]))
+            if val[0] == 0:                
+                #print([rowx, colx], val[1], len(val[1]))
                 valen = len(val[1])
                 if valen == 1:
+                    rowx, colx = from_cell_index(key)
                     self.currentdata[rowx][colx] = val[1][0]
                 elif valen == 0:
                     errocurr = True
@@ -303,12 +314,12 @@ class SudouCore:
     def workout_solution(self):
         emptyelements = self.get_empty_cell_count()
         while emptyelements > 0:
-            print("Empty Elements Left: ", emptyelements)
+            print("剩余未填数字的数量为: ", emptyelements)
             prvelments = emptyelements
             erroccur = self.workout_solution_core()
             if erroccur == True:
-                print("Error detected")
                 if len(self.process_stack) > 0:
+                    print("当期布局下无正确解，回滚到上一次")
                     self.currentdata.clear()
                     self.currentdata = self.process_stack.pop()
                     emptyelements = self.get_empty_cell_count()
@@ -320,7 +331,7 @@ class SudouCore:
                 emptyelements = self.get_empty_cell_count()
                 if emptyelements == prvelments:
                     # Parse the detect lock.
-                    print("僵局")
+                    print("当期布局没有直接可确定的数值，僵局。")
 
                     if self.detect_deadlock_entries() == True:
                         for linedata in self.currentdata:
@@ -362,32 +373,56 @@ class SudouCore:
         # Find out the potential solution
         potentialSolution = False
         for dictkey, dictval in dictduplicates.items():
-            print("发现两个完全相同的可能节点", dictkey, dictval)
-
             pos1row, pos1col = from_cell_index(dictval[0])
             pos2row, pos2col = from_cell_index(dictval[1])
+            sect1 = workout_section_index(pos1row, pos1col)
+            sect2 = workout_section_index(pos2row, pos2col)
 
-            currdata2 = []
-            for line in self.currentdata:
-                currdata2.append(line.copy())
+            if pos1row == pos2row or pos1col == pos2col or sect1 == sect2:
+                print("发现两个完全相同的可能节点且相关", dictkey, dictval)
+                currdata2 = []
+                for line in self.currentdata:
+                    currdata2.append(line.copy())
 
-            currdata2[pos1row][pos1col] = dictkey[0]
-            currdata2[pos2row][pos2col] = dictkey[1]
-            self.process_stack.append(currdata2)
+                currdata2[pos1row][pos1col] = dictkey[0]
+                currdata2[pos2row][pos2col] = dictkey[1]
+                self.process_stack.append(currdata2.copy())
 
-            currdata2 = []
-            for line in self.currentdata:
-                currdata2.append(line.copy())
+                currdata2.clear()
+                for line in self.currentdata:
+                    currdata2.append(line.copy())
 
-            currdata2[pos1row][pos1col] = dictkey[1]
-            currdata2[pos2row][pos2col] = dictkey[0]
-            self.process_stack.append(currdata2)
+                currdata2[pos1row][pos1col] = dictkey[1]
+                currdata2[pos2row][pos2col] = dictkey[0]
+                self.process_stack.append(currdata2.copy())
 
-            potentialSolution = True
+                potentialSolution = True
  
+        if potentialSolution == False:
+            for key, val in self.elemdict.items():
+                if val[0] == 0 and len(val[1]) == 2:
+                    print("发现该位置只可能有两个值：", key, val)
+                    
+                    posrow, poscol = from_cell_index(key)
+                    currdata2 = []
+                    for line in self.currentdata:
+                        currdata2.append(line.copy())
+                    currdata2[posrow][poscol] = val[1][0]
+                    self.process_stack.append(currdata2.copy())
+
+                    currdata2 = []
+                    for line in self.currentdata:
+                        currdata2.append(line.copy())
+                    currdata2[posrow][poscol] = val[1][1]
+                    self.process_stack.append(currdata2.copy())
+                    
+                    potentialSolution = True
+
         if potentialSolution == True:
             self.currentdata.clear()
             self.currentdata = self.process_stack.pop()
+        else:
+            pass
 
         return potentialSolution
 
@@ -514,12 +549,12 @@ class SudouCore:
                         for line in self.currentdata:
                             currdata2.append(line.copy())
                         currdata2[numval[0][0]][numval[0][1]] = numkey
-                        self.process_stack.append(currdata2)
+                        self.process_stack.append(currdata2.copy())
                         currdata2 = []
                         for line in self.currentdata:
                             currdata2.append(line.copy())
                         currdata2[numval[1][0]][numval[1][1]] = numkey
-                        self.process_stack.append(currdata2)
+                        self.process_stack.append(currdata2.copy())
 
             if potentialSolution == True:
                 self.currentdata.clear()
@@ -538,19 +573,14 @@ class SudouCore:
 
     ## Detect dead lock entries
     def detect_deadlock_entries(self):
-        if len(self.process_stack) > 0:
-            self.currentdata = self.process_stack.pop()
+        # Case 1. Two numbers for two possiblities
+        if self.deadlock_case1() == True:
             return True
-        else:
-            # Case 1. Two numbers for two possiblities
-            if self.deadlock_case1() == True:
-                return True
-            
-            # Case 2. One number
-            if self.deadlock_case2() == True:
-                return True
+        
+        # Case 2. One number
+        if self.deadlock_case2() == True:
+            return True
 
-            return False
-   
+        return False
 
 

@@ -77,7 +77,7 @@ print("原始输入:")
 for originline in origindata:
     print(originline)
 
-print("1. 试图解析")
+print("1. 求解开始")
 score = sudoucore.SudouCore()
 score.currentdata = origindata
 
@@ -86,3 +86,5 @@ score.workout_solution()
 print("2: 校验结果")
 score.check_data()
 
+print("3. 完成。")
+score.clear()
