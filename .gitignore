@@ -21,3 +21,6 @@ target/
 .project
 *.prefs
 *.classpath
+
+## Python
+__pycache__/
