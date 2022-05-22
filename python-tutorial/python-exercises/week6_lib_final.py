@@ -11,4 +11,4 @@ respbody = resp.json()
 # print(respbody)
 print(f"The search returned {respbody['resultCount']} results")
 for result in respbody["results"]:
-    print(f"Artist: {result['artistName']} - Album: {result['artistName']} - Track Count: {result['trackCount']}")
+    print(f"Artist: {result['artistName']} - Album: {result['collectionName']} - Track Count: {result['trackCount']}")
