@@ -102,6 +102,7 @@ def from_cell_index(cellidx):
 # Class: Sudou Core
 class SudouCore:
     currentdata = []
+    previousdata = []
     process_stack = []
     # Element data in work solution
     elemdict = {}
@@ -111,6 +112,7 @@ class SudouCore:
 
     def clear(self):
         self.currentdata = []
+        self.previousdata = []
         self.process_stack = []
         self.elemdict.clear()
 
@@ -319,31 +321,29 @@ class SudouCore:
             erroccur = self.workout_solution_core()
             if erroccur == True:
                 if len(self.process_stack) > 0:
-                    print("当期布局下无正确解，回滚到上一次")
+                    print("\033[0;30;45m当期布局下无正确解，回滚到上一次\033[0m")
                     self.currentdata.clear()
                     self.currentdata = self.process_stack.pop()
                     emptyelements = self.get_empty_cell_count()
                     continue
                 else:
-                    print("无法解决")
+                    print("\033[0;30;41m无法解决\033[0m")
                     break
             else:
                 emptyelements = self.get_empty_cell_count()
                 if emptyelements == prvelments:
                     # Parse the detect lock.
-                    print("当期布局没有直接可确定的数值，僵局。")
+                    print("\033[0;30;46m当期布局没有直接可确定的数值，僵局。\033[0m")
 
                     if self.detect_deadlock_entries() == True:
-                        for linedata in self.currentdata:
-                            print(linedata)
+                        self.display()
 
                         emptyelements = self.get_empty_cell_count()
                         continue
                     else:
                         break
                 else:
-                    for linedata in self.currentdata:
-                        print(linedata)
+                    self.display()
 
     ## Detect dead lock case 1
     def deadlock_case1(self):
@@ -428,7 +428,6 @@ class SudouCore:
 
     ## Detect dead lock case 2
     def deadlock_case2(self):
-
         allpossvaldict = init_num_check_dict()
         for rowidx in range(9):
             for colidx in range(9):
@@ -583,4 +582,40 @@ class SudouCore:
 
         return False
 
+
+    # Display line
+    def display_line(self, rowindex):
+        line = []
+        line.append("\033[1;36m|\033[0m") 
+        for colidx in range(9):
+            if self.currentdata[rowindex][colidx] == 0:
+                line.append("   ")
+            else:
+                if len(self.previousdata) > 0 and self.currentdata[rowindex][colidx] != self.previousdata[rowindex][colidx]:
+                    line.append(" \033[0;30;41m" + str(self.currentdata[rowindex][colidx]) + "\033[0m ")
+                else:
+                    line.append(" " + str(self.currentdata[rowindex][colidx]) + " ")
+            if colidx == 2 or colidx == 5 or colidx == 8:
+                line.append("\033[1;36m|\033[0m")
+        print(''.join(line))
+
+    # Display 
+    def display(self):        
+        print("\033[1;36m/---------+---------+---------\\\033[0m")
+        self.display_line(0)
+        self.display_line(1)
+        self.display_line(2)
+        print("\033[1;36m+---------+---------+---------+\033[0m")
+        self.display_line(3)
+        self.display_line(4)
+        self.display_line(5)
+        print("\033[1;36m+---------+---------+---------+\033[0m")
+        self.display_line(6)
+        self.display_line(7)
+        self.display_line(8)
+        print("\033[1;36m\\---------+---------+---------/\033[0m")
+
+        self.previousdata = []
+        for line in self.currentdata:
+            self.previousdata.append(line.copy())
 

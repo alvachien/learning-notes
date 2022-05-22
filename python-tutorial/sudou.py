@@ -74,13 +74,11 @@ elif inputMethod == 2:
 
 
 print("原始输入:")
-for originline in origindata:
-    print(originline)
-
-print("1. 求解开始")
 score = sudoucore.SudouCore()
 score.currentdata = origindata
+score.display()
 
+print("1. 求解开始")
 score.workout_solution()
 
 print("2: 校验结果")
