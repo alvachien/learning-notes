@@ -1,0 +1,4 @@
+https://httpstat.us/200?sleep=1000
+https://httpstat.us/500?sleep=2000
+https://www.pluralsight.com/
+https://openjdk.java.net

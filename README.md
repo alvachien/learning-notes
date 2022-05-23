@@ -6,14 +6,16 @@ My learning notes for the technical side.
 ## histories    
 
 
-Status | Name | Type | Author | Linkage | Language | Folder
+Status | Name | Comment | Author | Linkage | Language | Folder
 ----|--------| ---- | ------ | --- | ------- | -------
 In process | Mostly adequate guide | Book |  [Franklin Risby](https://github.com/DrBoolean) | [Link](https://github.com/MostlyAdequate/mostly-adequate-guide) | Javascript | [mostly-adequate-guide](./mostly-adequate-guide)
 In process | Mostly adequate guide (Chinese Edition) | Book | [Linghao Li](https://github.com/llh911001) | [Link](https://github.com/llh911001/mostly-adequate-guide-chinese/) | Javascript | [mostly-adequate-guide](./mostly-adequate-guide)
 In process | Maven官方文档 | Documentation |  | [Link](http://maven.apache.org/guides/index.html) | Java | [Part I](./maven-tutorial), [Part II](./maven-tutorial-2)
 In process | Thinking In Java | Book | Bruce Eckel | Link | Java  | [Thinking in java](./thinking_in_java)
-In process | Java教程 | Documentation |  |  | Java | [Link](./java-tutorial)
-In process | Python教程 | Documentation |  |  | Python | [Link](./python-tutorial)
+In process | Java教程 | Documentation, very basic |  |  | Java | [Link](./java-tutorial)
+In process | Java HttpClient | Online Course |  |  | Java | [Link](./java-httpclient)
+In process | Java Object Oriented | Online Course |  |  | Java | [Link](./java-object-oriented)
+Done | Python教程 | Documentation, including Sudoku game |  |  | Python | [Link](./python-tutorial)
 In process | Spring教程 | Documentation |  |  | Java | [Link](./spring-tutorial)
 In process | Spring Boot教程 | Documentation |  |  | Java | 
 DONE | JUnit 5 Fundamental | Documentation |  |  | Java | 
