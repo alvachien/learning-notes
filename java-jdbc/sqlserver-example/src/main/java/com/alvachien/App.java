@@ -1,8 +1,9 @@
 package com.alvachien;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
+// import java.io.File;
+// import java.io.FileInputStream;
+// import java.io.FileReader;
+// import java.io.Reader;
 
 import com.alvachien.util.ExceptionHandler;
 
@@ -69,13 +70,32 @@ public class App {
                 // reader.close();
 
                 comp.readCLOB("Planes");
-
             } else {
                 System.out.println("Fail: the text contents of " + fileName + " has NOT been uploaded");
             }
 
-            // Store blob.
-            
+            // Store blob. - Only once.
+            // String imgfileName = "bi-plane.png";
+            // File imgfile = new File(imgfileName);
+            // FileInputStream imgInputStream = new FileInputStream(imgfile);
+            // boolean imgsuccess = comp.storeBLOB("Planes", imgInputStream);
+            // imgInputStream.close();
+            // if (imgsuccess) {
+            //     System.out.println("Success: The image " + imgfileName + " has been stored");
+            // } else {
+            //     System.out.println("Faile: The image " + imgfileName + " has NOT been stored");
+            // }
+
+            System.out.println("List out all products by calling listProductsBy");
+            comp.listProductsBy("Planes");
+
+            System.out.println("Update email");
+            String newEmail = "diane@classicmodelcars.com";
+            String oldEmail = hrcomp.updateEmail(1002, newEmail);
+            if (oldEmail != null) {
+                System.out.println("email changed from " + oldEmail + " to " + newEmail);
+            }
+
         } catch(Exception exp) {            
             ExceptionHandler.handleException(exp);
         }

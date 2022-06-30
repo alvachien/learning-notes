@@ -1,8 +1,10 @@
 package com.alvachien;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -45,6 +47,21 @@ public class ProductsComponent {
     
         }
     }
+    public void listProductsBy(String productLine) throws Exception {
+        try( Connection connection = DriverManager.getConnection(Common.connectionUrl);
+        CallableStatement callableStatement = connection.prepareCall("{call listProductsFor(?)}"); ) {
+            callableStatement.setString(1, productLine);
+            boolean success = callableStatement.execute();
+            if (success) {
+                try(ResultSet resultSet = callableStatement.getResultSet();) {
+                    while(resultSet.next()) {
+                        String name = resultSet.getString("productName");
+                        System.out.println(name);
+                    }
+                }
+            }
+        }
+    }
 
     public boolean storeCLOB(String prodLine, InputStreamReader inStream) throws Exception {
         String sqlString = "UPDATE productLines SET htmlDescription = ? WHERE productLine = ?";
@@ -84,11 +101,28 @@ public class ProductsComponent {
 
         try (Connection connection = DriverManager.getConnection(Common.connectionUrl);
         PreparedStatement preparedStatement = connection.prepareStatement(sqlString)) {
-            preparedStatement.setString(2, prodLine);
             preparedStatement.setBinaryStream(1, inStream);
+            preparedStatement.setString(2, prodLine);
             preparedStatement.executeUpdate();
 
             return true;
         }
+    }
+
+    public InputStream readBLOB(String prodLine) throws Exception {
+        String sqlString = "SELECT image FROM productLines WHERE productLine = ?";
+        try (Connection connection = DriverManager.getConnection(Common.connectionUrl);
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlString)) {
+            preparedStatement.setString(1, prodLine);
+            try(ResultSet resultSet = preparedStatement.executeQuery();) {
+                if (resultSet.next()) {
+                    InputStream stream = resultSet.getBinaryStream(1);
+                    return stream;
+                }
+
+                return null;
+            }
+        }
+
     }
 }

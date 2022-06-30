@@ -1,5 +1,6 @@
 package com.alvachien;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -55,6 +56,19 @@ public class HrComponent {
             preparedStatement.setString(1, employeeNumber);
             int count = preparedStatement.executeUpdate();
             return count > 0 ? true: false;
+        }
+    }
+
+    public String updateEmail(int employeeNumber, String newEmail) throws Exception {
+        try(Connection conn = DriverManager.getConnection(Common.connectionUrl);
+        CallableStatement callableStatement = conn.prepareCall("{call updateEmail(?, ?)}"); ) {
+            callableStatement.setInt(1, employeeNumber);
+            callableStatement.registerOutParameter(2, java.sql.Types.NVARCHAR);
+            callableStatement.setString(2, newEmail);
+            callableStatement.execute();
+
+            String oldEmail = callableStatement.getString(2);
+            return oldEmail;
         }
     }
 }
