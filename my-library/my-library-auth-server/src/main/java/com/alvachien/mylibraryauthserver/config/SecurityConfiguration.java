@@ -13,6 +13,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,8 +35,10 @@ import org.springframework.security.oauth2.server.authorization.client.JdbcRegis
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
 	@Bean
 	@Order(Ordered.HIGHEST_PRECEDENCE)
@@ -94,6 +97,11 @@ public class SecurityConfiguration {
 	}
 
 	@Bean
+	public ProviderSettings authorizationServerSettings() {
+		return ProviderSettings.builder().issuer("http://localhost:9600").build();
+	}
+
+	@Bean
 	public JWKSource<SecurityContext> jwkSource() {
 		KeyPair keyPair = generateRsaKey();
 		RSAPublicKey publicKey = (RSAPublicKey)keyPair.getPublic();
@@ -119,5 +127,4 @@ public class SecurityConfiguration {
 
 		return keyPair;
 	}
-
 }
