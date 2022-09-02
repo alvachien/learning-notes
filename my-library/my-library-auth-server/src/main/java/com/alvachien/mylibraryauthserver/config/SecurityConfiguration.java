@@ -31,6 +31,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
@@ -55,7 +56,8 @@ public class SecurityConfiguration {
     @Bean
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
+        //http.authorizeRequests((authorize) -> authorize.anyRequest().authenticated())
+		http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
             .formLogin(Customizer.withDefaults());
 
         return http.build();
@@ -90,10 +92,11 @@ public class SecurityConfiguration {
 				.build();
 
 		// Save registered client in db as if in-memory
-		JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
-		registeredClientRepository.save(registeredClient);
+		// JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
+		// registeredClientRepository.save(registeredClient);
 
-		return registeredClientRepository;
+		// return registeredClientRepository;
+		return new InMemoryRegisteredClientRepository(registeredClient);
 	}
 
 	@Bean
