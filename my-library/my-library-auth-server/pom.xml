@@ -11,7 +11,7 @@
 	<groupId>com.alvachien</groupId>
 	<artifactId>my-library-auth-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Authorization server for my library</name>
+	<name>my-library-auth-server</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
