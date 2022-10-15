@@ -29,13 +29,23 @@ Spring project with JdbcTemplate, with SQL Server.
 
 Spring boot project.
 
-## learn-application-context
+## 007. learn-application-context
 
 Learn application context.
 
-## 007. Knowledge builder
+## 008. Knowledge builder
 
 Spring boot project:
 - Spring Boot 2.65
 - Spring Web
-- MS SQL sever
+- MS SQL sever Express
+
+## 009. Thymeleaf JPA demo
+
+A demo project with Spring Boot, Thymeleaf, and JPA.
+- Spring Boot;
+- Spring Web;
+- Spring JPA;
+- MS SQL sever Express
+
+
