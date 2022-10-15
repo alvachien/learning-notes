@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>View Person Role</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    </head>
+    <body>
+        <h1>View Person Role</h1>
+        <a th:href="@{/personroles}">Back to Person Role List</a>
+        <br/><br/>
+        <div th:if="${role}">
+            <table border="0">
+                <tr>
+                    <td>ID</td>
+                    <td>:</td>
+                    <td th:utext="${role.id}">...</td>          
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>:</td>
+                    <td th:utext="${role.roleName}">...</td>             
+                </tr>
+                <tr>
+                    <td>Value</td>
+                    <td>:</td>
+                    <td th:utext="${role.roleValue}">...</td>
+                </tr>
+            </table>
+            <br/><br/>
+            <div th:if="not ${allowDelete}">
+                <a th:href="@{/personroles/{roleId}/edit(roleId=${role.getId()})}">Edit</a> |
+                <a th:href="@{/personroles/{roleId}/delete(roleId=${role.getId()})}">Delete</a>
+            </div>
+            <form th:if="${allowDelete}" th:action="@{/personroles/{roleId}/delete(roleId=${role.getId()})}" method="POST">
+                Delete this contact? <input type="submit" th:value="Yes" />
+            </form>
+        </div>
+        <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error">            
+        </div>
+    </body>
+</html>

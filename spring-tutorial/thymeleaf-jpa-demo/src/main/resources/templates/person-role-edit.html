@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${add} ? 'Create a person role' : 'Edit a person role'" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+    <h1 th:text="${add} ? 'Create a person role:' : 'Edit a person role:'" />
+    <a th:href="@{/personroles}">Back to Person Role List</a>
+    <br /><br />
+    <form th:action="${add} ? @{/personroles/add} : @{/personroles/{roleId}/edit(roleId=${role.getId()})}"
+        th:object="${role}" method="POST">
+        <table border="0">
+            <tr th:if="${!add}">
+                <td>ID</td>
+                <td>:</td>
+                <td th:utext="*{id}">...</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>:</td>
+                <td><input type="text" th:field="*{roleName}" /></td>
+            </tr>
+            <tr>
+                <td>Value</td>
+                <td>:</td>
+                <td>
+                    <select th:field="*{roleValue}">
+                        <option th:each="roleOpt : ${T(com.alvachien.springtutorial.thymeleafjpademo.model.PersonRoleEnum).values()}" 
+                            th:value="${roleOpt}" th:text="${roleOpt}">
+                        </option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <input type="submit" th:value="${add} ? 'Create' : 'Update'" />
+    </form>
+
+    <br />
+    <!-- Check if errorMessage is not null and not empty -->
+    <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error" />
+</body>
+
+</html>
