@@ -28,7 +28,7 @@ In process | 算法的乐趣 | Book | | | | [Link](./algorithm-pleasure)
 In process | Effective Java (Third edition) | Book | Joshua Bloch | [Source code on Github](https://github.com/jbloch/effective-java-3e-source-code) | Java | [Link](./effective-java)
 In process | Ant Design of React | Documentation | | | | [Link](./ant-design-react)
 In process | My Library - an example to try Spring Authorization server | Documentation | | | | [Link](./my-library)
-
+In process | Spring Authorization server tutorial | Documentation | | | | [Link](./spring-authorization-tutorial)
 
 # About
 
