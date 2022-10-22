@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
@@ -50,8 +51,9 @@ public class AuthorizationServerConfig {
 	public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
 		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
+		// Redirect to the login page when not authenticated from the authorization endpoint
 		http
-			.exceptionHandling(exceptions ->
+			.exceptionHandling(exceptions ->				
 				exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
 			)
 			.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
@@ -59,7 +61,6 @@ public class AuthorizationServerConfig {
 		return http.build();
 	}
 
-	// @formatter:off
 	@Bean
 	public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
 		RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
@@ -84,7 +85,6 @@ public class AuthorizationServerConfig {
 
 		return registeredClientRepository;
 	}
-	// @formatter:on
 
 	@Bean
 	public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
@@ -118,18 +118,16 @@ public class AuthorizationServerConfig {
 		return ProviderSettings.builder().issuer("http://localhost:9000").build();
 	}
         
-	@Bean
-	public EmbeddedDatabase embeddedDatabase() {
-		// @formatter:off
-		return new EmbeddedDatabaseBuilder()
-				.generateUniqueName(true)
-				.setType(EmbeddedDatabaseType.H2)
-				.setScriptEncoding("UTF-8")
-				.addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql")
-				.addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql")
-				.addScript("org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql")
-				.build();
-		// @formatter:on
-	}
+	// @Bean
+	// public EmbeddedDatabase embeddedDatabase() {
+	// 	return new EmbeddedDatabaseBuilder()
+	// 			.generateUniqueName(true)
+	// 			.setType(EmbeddedDatabaseType.H2)
+	// 			.setScriptEncoding("UTF-8")
+	// 			.addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql")
+	// 			.addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql")
+	// 			.addScript("org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql")
+	// 			.build();
+	// }
 
 }
