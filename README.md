@@ -29,6 +29,7 @@ In process | Effective Java (Third edition) | Book | Joshua Bloch | [Source code
 In process | Ant Design of React | Documentation | | | | [Link](./ant-design-react)
 In process | My Library - an example to try Spring Authorization server | Documentation | | | | [Link](./my-library)
 In process | Spring Authorization server tutorial | Documentation | | | | [Link](./spring-authorization-tutorial)
+In process | Algorithms (4th edition)| Book | | | | [Link](./algorithm-4th)
 
 # About
 
