@@ -30,6 +30,8 @@ In process | Ant Design of React | Documentation | | | | [Link](./ant-design-rea
 In process | My Library - an example to try Spring Authorization server | Documentation | | | | [Link](./my-library)
 In process | Spring Authorization server tutorial | Documentation | | | | [Link](./spring-authorization-tutorial)
 In process | Algorithms (4th edition)| Book | | | | [Link](./algorithm-4th)
+In Process | CSS Collection | Learning | | | | [Link](./css-collection)
+In Process | Javascript Collection | Learning | | | | [Link](./javascript-collection)
 
 # About
 
