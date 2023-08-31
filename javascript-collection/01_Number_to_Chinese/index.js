@@ -50,8 +50,10 @@ function toChineseNumber(num) {
     return finalrsult;
 }
 
-console.log(toChineseNumber(45674576));
 
 function handleUIInput() {
-    var inputnum = document.getElementById('input-number');
+    var inputnum = document.getElementById('input-number').value;
+    //console.log(inputnum);
+    var output = document.getElementById('output-string');
+    output.value = toChineseNumber(inputnum);
 }
